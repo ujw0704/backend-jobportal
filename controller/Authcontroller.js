@@ -1,74 +1,88 @@
-import UserSchema from "../model/UserSchema.js"
-
-export const registerController = async (req, res, next) => {
+import User from "../model/UserSchema.js"
+ import bcrypt from "bcrypt"
+export const registerController = async (req, res) => {
+  const { name, email, password, number ,username } = req.body;
+  console.log(req.body)
   try {
-    const { name, email, password, number } = req.body;
-    // validate
     if (!name || !email || !password || !number) {
-      return next("all field required");
+     
+      res.send({status:202, massage:"resgter failed"})
+       
     }
     // check for user
-    const existingUser = await UserSchema.findOne({ email });
+    const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return next("email is already registered, please login");
+      
+       res.send({status:202, massage:"email is already registered, please login"})
     }
 
     // create and save user
-    const user = await UserSchema.create({
+    const user =  new User({
+      username,
       name,
       email,
-      password: await UserSchema.encryptPassword(password),
+      number,
+      password,
+      // location
+
     });
+    const registeruser = await user.save()
+
+    if(registeruser){
+
+      res.send({status:200, massage:"sucess registered"})
+    }
 
     // respone
   
-    const token = user.createJWT();
-    res.status(201).send({
-      sucess: true,
-      message: "User Created Successfully",
-      user: {
-        name: user.name,
-        lastName: user.lastName,
-        email: user.email,
-        location: user.location,
+    // const token = user.createJWT();
+    // console.log(token)
 
-      }
-    });
+    // res.status(201).send({
+    //   sucess: true,
+    //   message: "User Created Successfully",
+    //   user: {
+    //     name: user.name,
+    //     lastName: user.lastName,
+    //     email: user.email,
+    //     location: user.location,
+
+    //   }
+    // });
   } catch (error) {
-    next(error);
+   console.log(error);
   }
 };
 
-export const loginController = async (req, res, next) => {
-  try {
-    const { email, password } = req.body;
+export const loginController = async (req, res) => {
+
+    const { username, password } = req.body;
 
     // validation
-    if (!email || !password) {
-      return res.status(400).json({ error: "Please provide all fields" });
+    if (!username || !password) {
+      res.send({status:202, massage:"failed login"});
     }
 
-    const user = await UserSchema.findOne({ email });
-
+    const user = await User.findOne({ username });
+    console.log(user)
+    // res.send({status:200, massage:"done login"});
     // find user by email
     if (!user) {
-      return res.status(401).json({ error: "Invalid username or password" });
+      res.send({status:202, massage:" already  login"});
     }
 
-    const isMatch = await user.comparePassword(password);
-
+    const isMatch = await bcrypt.compare(password, user.password);;
+      console.log(isMatch)
     if (!isMatch) {
-      return res.status(401).json({ error: "Invalid username or password" });
+      res.send({status:202, massage:" password wrong"}); ;
     }
+    const token = user.createJWT();
+    console.log(token)
+    res.send({status:200, massage:"done login",token});
 
-    const token = user.createJwt();
-
-    res.status(200).json({
-      message: "Login Successful",
-      user,
-      token,
-    });
-  } catch (error) {
-    next(error);
-  }
+  //   res.send({status:200, massage:"login sucessful"});
+   
+  // } catch (error) {
+  //  console.log(error)
+  // }
 };

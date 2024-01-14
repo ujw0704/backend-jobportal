@@ -8,8 +8,9 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: [true, "Name is required"],
   },
-  last: {
+  username: {
     type: String,
+    required: [true, "Username is required"],
   },
   email: {
     type: String,
@@ -31,13 +32,13 @@ const UserSchema = new mongoose.Schema({
   number: {
     type: Number,
   },
-}, {
-  timestamps: true,
-});
+}, 
+  {timestamps: true,}
+);
 
 // middleware
 UserSchema.pre("save", async function () {
-  if (!this.isModified) return;
+  if (!this.isModified("password")) return;
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt)
 });
@@ -58,5 +59,6 @@ UserSchema.methods.comparePassword = async function(userPassword) {
 UserSchema.methods.createJWT = function() {
   return jwt.sign({ userId: this._id }, process.env.JWT_SECRET, { expiresIn: 3600 });
 };
-
-export default mongoose.model("user", UserSchema);
+ 
+const User = mongoose.model("User", UserSchema);
+export default User;

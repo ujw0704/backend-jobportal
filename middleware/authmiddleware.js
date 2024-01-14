@@ -1,25 +1,19 @@
+import JWT from "jsonwebtoken";
 
-
-import jwt from "jsonwebtoken";
-
-const userAuth = (req, res, next) => {
-    try {
-        const authHeader = req.headers.authorization;
-        if (!authHeader || !authHeader.startsWith("Bearer ")) {
-            return res.status(401).json({ error: "Authentication failed" });
-        }
-
-        const token = authHeader.split(" ")[1];
-        try {
-            const payload = jwt.verify(token, process.env.JWT_SECRET);
-            req.user = { userId: payload.userId };
-            next();
-        } catch (error) {
-            return res.status(401).json({ error: "Authentication failed" });
-        }
-    } catch (error) {
-        return res.status(500).json({ error: "Internal Server Error" });
-    }
+const userAuth = async (req, res, next) => {
+  const authHeader = req.headers.authorization;
+console.log(authHeader)
+  if (!authHeader || !authHeader.startsWith("Bearer")) {
+    next("Auth Failed");
+  }
+  const token = authHeader.split(" ")[1];
+  try {
+    const payload = JWT.verify(token, process.env.JWT_SECRET);
+    req.user = { userId: payload.userId };
+    next();
+  } catch (error) {
+    next("Auth Failed");
+  }
 };
 
 export default userAuth;
