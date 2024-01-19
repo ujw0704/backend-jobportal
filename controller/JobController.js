@@ -57,7 +57,7 @@ export const getSingleJob = async (req, res) => {
         }
     } catch (error) {
         console.error('Error in Fetching Record');
-        res.status(500).json("Server error");
+       res.send({status:500, massage:"internal error "})
     }
 };
 

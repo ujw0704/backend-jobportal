@@ -33,12 +33,12 @@ const JobSchema = new mongoose.Schema({
       },
 
 
-      password: {
-        type: String,
-        required: [true, "Password is required"],
-        minLength: [6, "Password should be greater than 6 characters"],
-        select: true,
-      },
+      // password: {
+      //   type: String,
+      //   required: [true, "Password is required"],
+      //   minLength: [6, "Password should be greater than 6 characters"],
+      //   select: true,
+      // },
       number: {
         type: Number,
       },
