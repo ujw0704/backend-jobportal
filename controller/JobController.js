@@ -45,15 +45,19 @@ export const getAllJobsBy = async (req, res) => {
 
 // get single job using id
 export const getSingleJob = async (req, res) => {
-    const jobId = req.params.id;
+    const _id = req.params.id.substring(1);
+//  const jobID  = req.body.id
+    //  console.log(Id)
 
     try {
-        const job = await job.findById(jobId);
+        const jobs = await job.findById( _id);
+        console.log(jobs)
 
-        if (!job) {
+        if (!jobs) {
             res.send({ status: 404, message: 'No record found with provided ID' });
         } else {
-            res.send({ status: 200, message: 'Record fetched successfully', data: job });
+            res.send({ status: 200, message: 'Record fetched successfully', data: jobs });
+            console.log(jobs)
         }
     } catch (error) {
         console.error('Error in Fetching Record');

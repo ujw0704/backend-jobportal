@@ -1,5 +1,6 @@
-import mongoose from "moongoose"
+import mongoose from "mongoose";
 import validator from "validator";
+
 
 const applySchema = new mongoose.Schema({
 
@@ -10,7 +11,9 @@ const applySchema = new mongoose.Schema({
     },
     email:{
         type:String,
-        required:[true,"email is required"]
+        required:[true,"email is required"],
+        unique: true,
+        validate: validator.isEmail
     },
 
    PhoneNumber:{
@@ -37,6 +40,6 @@ const applySchema = new mongoose.Schema({
     }
 
 })
-const Apply = mongoose.model("Apply", applySchema);
+const ApplyJobs = mongoose.model("ApplyJob", applySchema);
 
-export default Apply;
+export default ApplyJobs;

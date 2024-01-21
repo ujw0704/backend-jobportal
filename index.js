@@ -15,6 +15,7 @@ import { registerController , loginController} from "./controller/Authcontroller
 import authroute from "./routes/Authroute.js"
 
 import connectDB from "./config/db.js"
+import  applyJobs  from "./routes/ApplyRoutes.js"
 
 //dot env config
 dotenv.config()
@@ -35,6 +36,7 @@ app.use(morgan("dev"))
 app.use("/register", registerController)
  app.use("/login", loginController)
  app.use(jobRoutes);
+  app.use(applyJobs)
 
 
 // validation middle ware
