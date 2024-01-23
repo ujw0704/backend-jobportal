@@ -4,6 +4,7 @@ import  color from "colors"
 import cors from "cors"
 import morgan from "morgan"
 
+
 //route
 // // import testPostController from "./controller/test.controller.js"
 // import jobroute from "./routes/Jobsroutes.js"
@@ -12,7 +13,7 @@ import { registerController , loginController} from "./controller/Authcontroller
 //middleWare
  import errorHandlerMiddleware from './middleware/errorMiddleware.js'
   import jobRoutes from "./routes/Jobsroutes.js"
-import authroute from "./routes/Authroute.js"
+// import authroute from "./routes/Authroute.js"
 
 import connectDB from "./config/db.js"
 import  applyJobs  from "./routes/ApplyRoutes.js"
@@ -37,6 +38,7 @@ app.use("/register", registerController)
  app.use("/login", loginController)
  app.use(jobRoutes);
   app.use(applyJobs)
+//multer
 
 
 // validation middle ware
