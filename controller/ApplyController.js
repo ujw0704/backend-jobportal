@@ -5,6 +5,7 @@ import ApplyJobs from "../model/ApplySchema.js";
  const ApplyJob = async (req,res)=>{
     const{name, email, PhoneNumber,coverLetter,experinceLevel}=req.body
     console.log(req.body)
+    console.log(JSON.stringify(req.body));
 
     const resume = req.file ? req.file.path : null;
   if(!name||!email||!PhoneNumber||!resume||!coverLetter||!experinceLevel){
