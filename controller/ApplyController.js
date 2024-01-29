@@ -16,10 +16,14 @@ import ApplyJobs from "../model/ApplySchema.js";
   try {
        
     const savedApplyJob =  new ApplyJobs({
-       name,email,PhoneNumber,coverLetter,experinceLevel
+      
+      name,email,PhoneNumber,coverLetter,experinceLevel
     })
+    console.log('Saved ApplyJob:', savedApplyJob)
      const newApplyJob = await savedApplyJob.save();
+     console.log(newApplyJob)
      if(newApplyJob){
+      console.log(newApplyJob)
     
     res.send({ status: 201, message: 'Data has been inserted successfully', data: savedApplyJob });
 

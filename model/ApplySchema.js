@@ -19,6 +19,7 @@ const applySchema = new mongoose.Schema({
     resume: {
         type: String,
         required: [true, "cv is required"],
+        path: String,
     },
     coverLetter: {
         type: String,
@@ -26,6 +27,7 @@ const applySchema = new mongoose.Schema({
     experienceLevel: {
         type: String,
     },
+   
 });
 
 const ApplyJobs = mongoose.model("ApplyJob", applySchema);

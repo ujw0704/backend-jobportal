@@ -12,7 +12,7 @@ const router = express.Router()
     },
     filename: function (req, file, cb) {
       const ext = path.extname(file.originalname);  
-      const filename = file.originalname + ext;
+      const filename = Date.now() + "-" + file.originalname; 
       cb(null, filename);
     },
   });
