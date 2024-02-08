@@ -112,4 +112,38 @@ export const removeJob = async (req, res) => {
     }
 };
 
-// seachbar
+// handleCenterseachbar
+
+export const centersearch = async(req, res)=>{
+    
+        let centerInput =  req.params.input.substring(1)
+        let companydata =  await job.find({company:centerInput})
+        let positionData =  await job.find({position:centerInput})
+        // console.log(centerInput)
+        console.log(positionData,companydata)
+        // return the data in json format
+    
+
+           
+                function fetchdata(companydata, positionData){
+
+                
+            if(companydata.length!==0 ){
+                console.log("hello")
+                // console.log(companydata,positionData)
+                res.send({status :200,message:'Search Result',data:companydata}) 
+                return true 
+            }else if(positionData.length!==0){
+                res.send({status :200,message:'Search Result',data:positionData})
+                return true
+                
+            }else{
+               res.send({status :202,message:'not found'})
+               return false
+            }
+        }
+         fetchdata(companydata, positionData)
+    }
+//matching seaechbar
+  
+
