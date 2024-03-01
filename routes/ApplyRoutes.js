@@ -1,24 +1,48 @@
+// import express from "express";
+// import ApplyJobs from "../controller/ApplyController.js";
+// import multer from 'multer';
+// import path from 'path'
+
+// const router = express.Router()
+//  //multer configure
+
+//  const storage = multer.diskStorage({
+//     destination: function (req, file, cb) {
+//       cb(null, 'uploads/'); 
+//     },
+//     filename: function (req, file, cb) {
+//       const ext = path.extname(file.originalname);  
+//       const filename = Date.now() + "-" + file.originalname; 
+//       cb(null, filename);
+//     },
+//   });
+  
+//   const upload = multer({ storage: storage });
+
+// router.post("/applyJobs", upload.single('resume'), ApplyJobs)
+
+// export default router
 import express from "express";
 import ApplyJobs from "../controller/ApplyController.js";
 import multer from 'multer';
-import path from 'path'
+import path from 'path';
 
-const router = express.Router()
- //multer configure
+const router = express.Router();
 
- const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, 'uploads/'); 
-    },
-    filename: function (req, file, cb) {
-      const ext = path.extname(file.originalname);  
-      const filename = Date.now() + "-" + file.originalname; 
-      cb(null, filename);
-    },
-  });
-  
-  const upload = multer({ storage: storage });
+// Multer configure
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/');
+  },
+  filename: function (req, file, cb) {
+    const ext = path.extname(file.originalname);  
+    const filename = Date.now() + "-" + file.originalname; 
+    cb(null, filename);
+  },
+});
 
-router.post("/applyJobs", upload.single('resume'), ApplyJobs)
+const upload = multer({ storage: storage });
 
-export default router
+router.post("/applyJobs", upload.single('resume'), ApplyJobs);
+
+export default router;

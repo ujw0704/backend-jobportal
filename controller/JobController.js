@@ -1,30 +1,46 @@
- import job from "../model/JobSChema.js";
+
+  
+import job from "../model/JobSChema.js";
 
 // job new creation
 export const createJobs = async (req, res) => {
-    const { company, position, worktype, workLocation,email,password,number } = req.body;
+    const { company, position, worktype, workLocation, email,  number, salary, jobDescription } = req.body;
     console.log(req.body)
-    if (!company || !position || !worktype || !workLocation ||!email ||!password||!number) {
-        
+    if (!company || !position || !worktype || !workLocation || !email  || !number || !salary || !jobDescription) {  
         return res.send({ status: 400, message: "Required all fields of position" });
     }
 
     try {
-       
-        const savedJobs =  new job({
-            company, position, worktype, workLocation,email,password,number
+        // Check if a job with the provided email already exists
+        const existingJob = await job.findOne({ email: email });
 
-        })
-         const newJob = await savedJobs.save();
-         if(newJob){
-        
-        res.send({ status: 201, message: 'Data has been inserted successfully', data: savedJobs });
+        if (existingJob) {
+            // If a job with the same email exists, update its fields
+            existingJob.company = company;
+            existingJob.position = position;
+            existingJob.worktype = worktype;
+            existingJob.workLocation = workLocation;
+            // existingJob.password = password;
+            existingJob.number = number;
+            existingJob.salary = salary;
+            existingJob.jobDescription = jobDescription;
 
-         }
+            // Save the updated job
+            const updatedJob = await existingJob.save();
+            res.status(200).json({ status: 200, message: 'Job updated successfully', data: updatedJob });
+        } else {
+            // If no job with the same email exists, create a new job
+            const newJob = new job({
+                company, position, worktype, workLocation, email,  number, salary, jobDescription
+            });
 
+            // Save the new job
+            const savedJob = await newJob.save();
+            res.status(201).json({ status: 201, message: 'Job created successfully', data: savedJob });
+        }
     } catch (error) {
         console.error(error);
-        res.send({ status: 500, message: "Internal Server Error" });
+        res.status(500).json({ status: 500, message: "Internal Server Error" });
     }
 };
 
@@ -46,22 +62,18 @@ export const getAllJobsBy = async (req, res) => {
 // get single job using id
 export const getSingleJob = async (req, res) => {
     const _id = req.params.id.substring(1);
-//  const jobID  = req.body.id
-    //  console.log(Id)
 
     try {
-        const jobs = await job.findById( _id);
-        console.log(jobs)
+        const jobs = await job.findById(_id);
 
         if (!jobs) {
             res.send({ status: 404, message: 'No record found with provided ID' });
         } else {
             res.send({ status: 200, message: 'Record fetched successfully', data: jobs });
-            console.log(jobs)
         }
     } catch (error) {
         console.error('Error in Fetching Record');
-       res.send({status:500, massage:"internal error "})
+        res.send({ status: 500, message: "Internal Server Error" });
     }
 };
 
@@ -112,38 +124,24 @@ export const removeJob = async (req, res) => {
     }
 };
 
-// handleCenterseachbar
+// handleCentersearchbar
+export const centersearch = async(req, res) => {
+    let centerInput = req.params.input.substring(1)
+    let companydata = await job.find({ company: centerInput })
+    let positionData = await job.find({ position: centerInput })
 
-export const centersearch = async(req, res)=>{
-    
-        let centerInput =  req.params.input.substring(1)
-        let companydata =  await job.find({company:centerInput})
-        let positionData =  await job.find({position:centerInput})
-        // console.log(centerInput)
-        console.log(positionData,companydata)
-        // return the data in json format
-    
-
-           
-                function fetchdata(companydata, positionData){
-
-                
-            if(companydata.length!==0 ){
-                console.log("hello")
-                // console.log(companydata,positionData)
-                res.send({status :200,message:'Search Result',data:companydata}) 
-                return true 
-            }else if(positionData.length!==0){
-                res.send({status :200,message:'Search Result',data:positionData})
-                return true
-                
-            }else{
-               res.send({status :202,message:'not found'})
-               return false
-            }
+    function fetchdata(companydata, positionData) {
+        if (companydata.length !== 0) {
+            res.send({ status: 200, message: 'Search Result', data: companydata })
+            return true
+        } else if (positionData.length !== 0) {
+            res.send({ status: 200, message: 'Search Result', data: positionData })
+            return true
+        } else {
+            res.send({ status: 202, message: 'not found' })
+            return false
         }
-         fetchdata(companydata, positionData)
     }
-//matching seaechbar
-  
+    fetchdata(companydata, positionData)
+};
 

@@ -17,7 +17,7 @@ const JobSchema = new mongoose.Schema({
     worktype: {
         type: String,
         enum: ["full-time", "part-time", "internship", "contract"],  
-        default: "full-time",
+        unique:true
     },
     workLocation: {
         type: String,
@@ -43,6 +43,15 @@ const JobSchema = new mongoose.Schema({
         type: Number,
       },
         
+      salary: {
+        type:Number,
+        
+      },
+    jobDescription: {
+        type:String,
+        maxlength:[500,"Job description must not exceed 500 characters."]
+
+    }
 }, { timestamps: true });
 
 const job = mongoose.model("Job", JobSchema);
